@@ -47,16 +47,52 @@
             box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
         }
 
-        /* Calculator Styles */
+        /* Enhanced Calculator Styles */
         .calc-btn {
-            @apply h-16 flex items-center justify-center rounded-2xl text-2xl font-semibold transition-all active:scale-95;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 4.5rem;
+            border-radius: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             background: #f3f4f6;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            width: 100%;
         }
-        .calc-btn:hover { background: #e5e7eb; }
-        .op-btn { @apply bg-blue-100 text-blue-600; }
-        .op-btn:hover { @apply bg-blue-200; }
-        .eq-btn { @apply bg-blue-600 text-white col-span-2; }
-        .eq-btn:hover { @apply bg-blue-700; }
+        
+        @media (min-width: 640px) {
+            .calc-btn {
+                height: 4rem;
+                font-size: 1.25rem;
+            }
+        }
+
+        .calc-btn:active { 
+            transform: scale(0.92); 
+            background: #e5e7eb;
+        }
+
+        .op-btn { 
+            background: #eff6ff; 
+            color: #2563eb; 
+        }
+        .op-btn:active { background: #dbeafe; }
+        
+        .eq-btn { 
+            background: #2563eb; 
+            color: white; 
+        }
+        .eq-btn:active { background: #1d4ed8; }
+        
+        .clear-btn {
+            background: #fee2e2;
+            color: #dc2626;
+            grid-column: span 2;
+        }
+        .clear-btn:active { background: #fecaca; }
         
         .animate-fade-in {
             animation: fadeIn 0.3s ease-out;
@@ -69,11 +105,11 @@
 </head>
 <body>
 
-    <div class="glass-card w-full max-w-md rounded-3xl p-6 md:p-8">
+    <div class="glass-card w-full max-w-md rounded-[2.5rem] p-6 md:p-8">
         <!-- Main Navigation -->
         <div class="flex bg-gray-100 p-1.5 rounded-2xl mb-8">
-            <button id="navBmi" onclick="showApp('bmi')" class="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all active-tab">BMI Tool</button>
-            <button id="navCalc" onclick="showApp('calc')" class="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all text-gray-500">Calculator</button>
+            <button id="navBmi" onclick="showApp('bmi')" class="flex-1 py-3 rounded-xl font-bold text-sm transition-all active-tab">BMI Tool</button>
+            <button id="navCalc" onclick="showApp('calc')" class="flex-1 py-3 rounded-xl font-bold text-sm transition-all text-gray-500">Calculator</button>
         </div>
 
         <!-- BMI APP SECTION -->
@@ -93,11 +129,11 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Height (cm)</label>
-                            <input type="number" id="heightCm" placeholder="175" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="number" id="heightCm" placeholder="175" class="w-full px-4 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Weight (kg)</label>
-                            <input type="number" id="weightKg" placeholder="70" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="number" id="weightKg" placeholder="70" class="w-full px-4 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
                         </div>
                     </div>
                 </div>
@@ -106,20 +142,20 @@
                     <div class="grid grid-cols-3 gap-2">
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Ft</label>
-                            <input type="number" id="heightFt" placeholder="5" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="number" id="heightFt" placeholder="5" class="w-full px-4 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">In</label>
-                            <input type="number" id="heightIn" placeholder="9" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="number" id="heightIn" placeholder="9" class="w-full px-4 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Lbs</label>
-                            <input type="number" id="weightLbs" placeholder="160" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="number" id="weightLbs" placeholder="160" class="w-full px-4 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
                         </div>
                     </div>
                 </div>
 
-                <button onclick="calculateBMI()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all transform active:scale-95">
+                <button onclick="calculateBMI()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all transform active:scale-95 text-lg mt-2">
                     Calculate BMI
                 </button>
             </div>
@@ -127,48 +163,48 @@
             <!-- BMI Result -->
             <div id="resultContainer" class="mt-8 hidden animate-fade-in border-t pt-6">
                 <div class="text-center">
-                    <h2 id="bmiValue" class="text-5xl font-extrabold text-blue-600 my-1">24.5</h2>
-                    <p id="bmiStatus" class="text-lg font-bold text-gray-800">Healthy Weight</p>
+                    <h2 id="bmiValue" class="text-6xl font-extrabold text-blue-600 my-1">24.5</h2>
+                    <p id="bmiStatus" class="text-xl font-bold text-gray-800">Healthy Weight</p>
                 </div>
                 <div class="gauge-container">
                     <div id="gaugeBar" class="gauge-bar"></div>
                 </div>
-                <div id="description" class="p-4 rounded-xl text-sm leading-relaxed text-center font-medium"></div>
+                <div id="description" class="p-5 rounded-2xl text-sm leading-relaxed text-center font-medium"></div>
             </div>
         </div>
 
         <!-- MATH CALCULATOR SECTION -->
-        <div id="mathApp" class="hidden">
-
+        <div id="mathApp" class="hidden animate-fade-in">
             <!-- Display -->
-            <div class="bg-gray-50 rounded-2xl p-6 mb-4 text-right border border-gray-100 overflow-hidden">
-                <div id="calcHistory" class="text-gray-400 text-sm h-6 overflow-hidden"></div>
-                <div id="calcDisplay" class="text-3xl font-bold text-gray-800 truncate">0</div>
+            <div class="bg-gray-50 rounded-[2rem] p-6 mb-6 text-right border border-gray-100 overflow-hidden shadow-inner">
+                <div id="calcHistory" class="text-gray-400 text-sm h-6 overflow-hidden font-medium"></div>
+                <div id="calcDisplay" class="text-4xl font-bold text-gray-800 truncate tracking-tight">0</div>
             </div>
 
-            <!-- Keypad -->
+            <!-- Optimized Keypad Grid -->
             <div class="grid grid-cols-4 gap-3">
-                <button onclick="calcClear()" class="calc-btn text-red-500 col-span-2">AC</button>
+                <button onclick="calcClear()" class="calc-btn clear-btn">AC</button>
                 <button onclick="calcInput('/')" class="calc-btn op-btn">÷</button>
-                <button onclick="calcInput('*')" class="calc-btn op-btn">×</button>
+                <button onclick="calcBackspace()" class="calc-btn op-btn">⌫</button>
                 
                 <button onclick="calcInput('7')" class="calc-btn">7</button>
                 <button onclick="calcInput('8')" class="calc-btn">8</button>
                 <button onclick="calcInput('9')" class="calc-btn">9</button>
-                <button onclick="calcInput('-')" class="calc-btn op-btn">−</button>
+                <button onclick="calcInput('*')" class="calc-btn op-btn">×</button>
                 
                 <button onclick="calcInput('4')" class="calc-btn">4</button>
                 <button onclick="calcInput('5')" class="calc-btn">5</button>
                 <button onclick="calcInput('6')" class="calc-btn">6</button>
-                <button onclick="calcInput('+')" class="calc-btn op-btn">+</button>
+                <button onclick="calcInput('-')" class="calc-btn op-btn">−</button>
                 
                 <button onclick="calcInput('1')" class="calc-btn">1</button>
                 <button onclick="calcInput('2')" class="calc-btn">2</button>
                 <button onclick="calcInput('3')" class="calc-btn">3</button>
-                <button onclick="calcResult()" class="calc-btn eq-btn row-span-2">=</button>
+                <button onclick="calcInput('+')" class="calc-btn op-btn">+</button>
                 
                 <button onclick="calcInput('0')" class="calc-btn col-span-2">0</button>
                 <button onclick="calcInput('.')" class="calc-btn">.</button>
+                <button onclick="calcResult()" class="calc-btn eq-btn">=</button>
             </div>
         </div>
     </div>
@@ -176,7 +212,6 @@
     <script>
         let currentApp = 'bmi';
 
-        // App Navigation
         function showApp(app) {
             currentApp = app;
             const bmiApp = document.getElementById('bmiApp');
@@ -188,18 +223,17 @@
                 bmiApp.classList.remove('hidden');
                 mathApp.classList.add('hidden');
                 navBmi.classList.add('active-tab');
-                navCalc.classList.remove('active-tab', 'text-white');
+                navCalc.classList.remove('active-tab');
                 navCalc.classList.add('text-gray-500');
             } else {
                 mathApp.classList.remove('hidden');
                 bmiApp.classList.add('hidden');
                 navCalc.classList.add('active-tab');
-                navBmi.classList.remove('active-tab', 'text-white');
+                navBmi.classList.remove('active-tab');
                 navBmi.classList.add('text-gray-500');
             }
         }
 
-        // --- BMI LOGIC ---
         let currentUnit = 'metric';
         function switchUnit(unit) {
             currentUnit = unit;
@@ -269,12 +303,18 @@
             desc.style.color = color;
         }
 
-        // --- MATH CALCULATOR LOGIC ---
         let calcExpression = "";
         const calcDisplay = document.getElementById('calcDisplay');
         const calcHistory = document.getElementById('calcHistory');
 
         function calcInput(val) {
+            // Prevent multiple decimal points in one number segment
+            if (val === '.') {
+                const parts = calcExpression.split(/[+\-*/]/);
+                const lastPart = parts[parts.length - 1];
+                if (lastPart.includes('.')) return;
+            }
+            
             if (calcExpression === "0" && !isNaN(val)) calcExpression = val;
             else calcExpression += val;
             updateCalcUI();
@@ -288,7 +328,7 @@
 
         function calcBackspace() {
             if (calcExpression.length > 0) {
-                calcExpression = calcExpression.slice(0, -1);
+                calcExpression = calcExpression.toString().slice(0, -1);
                 updateCalcUI();
             }
         }
@@ -296,8 +336,9 @@
         function calcResult() {
             try {
                 if (!calcExpression) return;
-                // Safety check and conversion for visual operators
                 const sanitized = calcExpression.replace(/×/g, '*').replace(/÷/g, '/');
+                if (/[+\-*/.]$/.test(sanitized)) return;
+                
                 const result = eval(sanitized);
                 calcHistory.innerText = calcExpression + " =";
                 calcExpression = result.toString();
@@ -312,37 +353,26 @@
             calcDisplay.innerText = calcExpression || "0";
         }
 
-        // --- GLOBAL KEYBOARD LISTENER ---
         document.addEventListener('keydown', (e) => {
             if (currentApp === 'calc') {
                 const key = e.key;
-                
-                // Numbers & Operators
                 if (/[0-9]/.test(key)) calcInput(key);
                 if (key === '+') calcInput('+');
                 if (key === '-') calcInput('-');
                 if (key === '*') calcInput('*');
                 if (key === '/') {
-                    e.preventDefault(); // Prevent search bar in some browsers
+                    e.preventDefault();
                     calcInput('/');
                 }
                 if (key === '.') calcInput('.');
-                
-                // Actions
                 if (key === 'Enter' || key === '=') {
                     e.preventDefault();
                     calcResult();
                 }
-                if (key === 'Backspace') {
-                    calcBackspace();
-                }
-                if (key === 'Escape') {
-                    calcClear();
-                }
+                if (key === 'Backspace') calcBackspace();
+                if (key === 'Escape') calcClear();
             } else if (currentApp === 'bmi') {
-                if (e.key === 'Enter') {
-                    calculateBMI();
-                }
+                if (e.key === 'Enter') calculateBMI();
             }
         });
     </script>
