@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Health & Utility Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -11,34 +11,39 @@
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #f6f8fb 0%, #e9effd 100%);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            padding: 0.75rem;
+            overflow: hidden; /* Prevent body scroll */
         }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            max-height: 700px; /* Limit height on larger mobile screens */
+            display: flex;
+            flex-direction: column;
         }
 
         .gauge-container {
             position: relative;
-            height: 12px;
+            height: 8px;
             background: #eee;
-            border-radius: 6px;
+            border-radius: 4px;
             overflow: hidden;
-            margin: 20px 0;
+            margin: 12px 0;
         }
 
         .gauge-bar {
             height: 100%;
             width: 0%;
             transition: width 0.5s ease-out, background-color 0.5s ease;
-            border-radius: 6px;
+            border-radius: 4px;
         }
 
         .active-tab {
@@ -47,164 +52,158 @@
             box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
         }
 
-        /* Enhanced Calculator Styles */
+        /* Responsive Calculator Grid */
         .calc-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 4.5rem;
-            border-radius: 1.5rem;
-            font-size: 1.5rem;
+            height: 3.5rem; /* Dynamic height to fit viewport */
+            border-radius: 1.25rem;
+            font-size: 1.25rem;
             font-weight: 600;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.15s ease;
             background: #f3f4f6;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
-            width: 100%;
         }
         
-        @media (min-width: 640px) {
-            .calc-btn {
-                height: 4rem;
-                font-size: 1.25rem;
-            }
+        /* Adjust for very short screens */
+        @media (max-height: 667px) {
+            .calc-btn { height: 3rem; font-size: 1.1rem; }
+            .glass-card { padding: 1rem !important; }
+            .nav-container { margin-bottom: 1rem !important; }
         }
 
         .calc-btn:active { 
-            transform: scale(0.92); 
+            transform: scale(0.95); 
             background: #e5e7eb;
         }
 
-        .op-btn { 
-            background: #eff6ff; 
-            color: #2563eb; 
-        }
-        .op-btn:active { background: #dbeafe; }
-        
-        .eq-btn { 
-            background: #2563eb; 
-            color: white; 
-        }
-        .eq-btn:active { background: #1d4ed8; }
-        
-        .clear-btn {
-            background: #fee2e2;
-            color: #dc2626;
-            grid-column: span 2;
-        }
-        .clear-btn:active { background: #fecaca; }
+        .op-btn { background: #eff6ff; color: #2563eb; }
+        .eq-btn { background: #2563eb; color: white; }
+        .clear-btn { background: #fee2e2; color: #dc2626; grid-column: span 2; }
         
         .animate-fade-in {
-            animation: fadeIn 0.3s ease-out;
+            animation: fadeIn 0.2s ease-out;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hide number input spinners */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
     </style>
 </head>
 <body>
 
-    <div class="glass-card w-full max-w-md rounded-[2.5rem] p-6 md:p-8">
+    <div class="glass-card w-full max-w-md rounded-[2rem] p-5 md:p-8">
         <!-- Main Navigation -->
-        <div class="flex bg-gray-100 p-1.5 rounded-2xl mb-8">
-            <button id="navBmi" onclick="showApp('bmi')" class="flex-1 py-3 rounded-xl font-bold text-sm transition-all active-tab">BMI Tool</button>
-            <button id="navCalc" onclick="showApp('calc')" class="flex-1 py-3 rounded-xl font-bold text-sm transition-all text-gray-500">Calculator</button>
+        <div class="nav-container flex bg-gray-100 p-1 rounded-2xl mb-6 flex-shrink-0">
+            <button id="navBmi" onclick="showApp('bmi')" class="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all active-tab">BMI Tool</button>
+            <button id="navCalc" onclick="showApp('calc')" class="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all text-gray-500">Calculator</button>
         </div>
 
-        <!-- BMI APP SECTION -->
-        <div id="bmiApp">
-            <div class="text-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-800">BMI Calculator</h1>
-                <p class="text-gray-500 text-sm">Check your Body Mass Index</p>
-            </div>
+        <!-- Scrollable Content Area -->
+        <div class="flex-1 overflow-hidden">
+            <!-- BMI APP SECTION -->
+            <div id="bmiApp" class="h-full flex flex-col">
+                <div class="text-center mb-4 flex-shrink-0">
+                    <h1 class="text-xl font-bold text-gray-800">BMI Calculator</h1>
+                    <p class="text-gray-400 text-xs">Body Mass Index</p>
+                </div>
 
-            <div class="flex bg-gray-50 p-1 rounded-xl mb-6 border border-gray-200">
-                <button id="metricTab" onclick="switchUnit('metric')" class="flex-1 py-2 rounded-lg font-semibold text-xs transition-all bg-white shadow-sm text-blue-600">Metric</button>
-                <button id="imperialTab" onclick="switchUnit('imperial')" class="flex-1 py-2 rounded-lg font-semibold text-xs transition-all text-gray-500">Imperial</button>
-            </div>
+                <div class="flex bg-gray-50 p-1 rounded-xl mb-4 border border-gray-200 flex-shrink-0">
+                    <button id="metricTab" onclick="switchUnit('metric')" class="flex-1 py-1.5 rounded-lg font-semibold text-xs transition-all bg-white shadow-sm text-blue-600">Metric</button>
+                    <button id="imperialTab" onclick="switchUnit('imperial')" class="flex-1 py-1.5 rounded-lg font-semibold text-xs transition-all text-gray-500">Imperial</button>
+                </div>
 
-            <div class="space-y-4">
-                <div id="metricInputs" class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Height (cm)</label>
-                            <input type="number" id="heightCm" placeholder="175" class="w-full px-4 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Weight (kg)</label>
-                            <input type="number" id="weightKg" placeholder="70" class="w-full px-4 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
+                <div class="space-y-3 flex-shrink-0">
+                    <div id="metricInputs">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Height (cm)</label>
+                                <input type="number" id="heightCm" placeholder="175" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-base">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Weight (kg)</label>
+                                <input type="number" id="weightKg" placeholder="70" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-base">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div id="imperialInputs" class="hidden space-y-4">
-                    <div class="grid grid-cols-3 gap-2">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Ft</label>
-                            <input type="number" id="heightFt" placeholder="5" class="w-full px-4 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">In</label>
-                            <input type="number" id="heightIn" placeholder="9" class="w-full px-4 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Lbs</label>
-                            <input type="number" id="weightLbs" placeholder="160" class="w-full px-4 py-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-lg">
+                    <div id="imperialInputs" class="hidden">
+                        <div class="grid grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Ft</label>
+                                <input type="number" id="heightFt" placeholder="5" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-base">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">In</label>
+                                <input type="number" id="heightIn" placeholder="9" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-base">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">Lbs</label>
+                                <input type="number" id="weightLbs" placeholder="160" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none text-base">
+                            </div>
                         </div>
                     </div>
+
+                    <button onclick="calculateBMI()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-md transition-all transform active:scale-95 text-base">
+                        Calculate Result
+                    </button>
                 </div>
 
-                <button onclick="calculateBMI()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 rounded-2xl shadow-lg transition-all transform active:scale-95 text-lg mt-2">
-                    Calculate BMI
-                </button>
-            </div>
-
-            <!-- BMI Result -->
-            <div id="resultContainer" class="mt-8 hidden animate-fade-in border-t pt-6">
-                <div class="text-center">
-                    <h2 id="bmiValue" class="text-6xl font-extrabold text-blue-600 my-1">24.5</h2>
-                    <p id="bmiStatus" class="text-xl font-bold text-gray-800">Healthy Weight</p>
+                <!-- BMI Result (Inside scrollable if needed, but fixed layout here) -->
+                <div id="resultContainer" class="mt-4 hidden animate-fade-in border-t pt-4 flex-1">
+                    <div class="text-center">
+                        <h2 id="bmiValue" class="text-4xl font-extrabold text-blue-600">24.5</h2>
+                        <p id="bmiStatus" class="text-lg font-bold text-gray-800">Healthy Weight</p>
+                    </div>
+                    <div class="gauge-container">
+                        <div id="gaugeBar" class="gauge-bar"></div>
+                    </div>
+                    <div id="description" class="p-3 rounded-xl text-xs leading-snug text-center font-medium"></div>
                 </div>
-                <div class="gauge-container">
-                    <div id="gaugeBar" class="gauge-bar"></div>
+            </div>
+
+            <!-- MATH CALCULATOR SECTION -->
+            <div id="mathApp" class="hidden h-full flex flex-col animate-fade-in">
+                <!-- Display -->
+                <div class="bg-gray-50 rounded-2xl p-4 mb-4 text-right border border-gray-100 overflow-hidden shadow-inner flex-shrink-0">
+                    <div id="calcHistory" class="text-gray-400 text-xs h-4 overflow-hidden font-medium"></div>
+                    <div id="calcDisplay" class="text-3xl font-bold text-gray-800 truncate">0</div>
                 </div>
-                <div id="description" class="p-5 rounded-2xl text-sm leading-relaxed text-center font-medium"></div>
-            </div>
-        </div>
 
-        <!-- MATH CALCULATOR SECTION -->
-        <div id="mathApp" class="hidden animate-fade-in">
-            <!-- Display -->
-            <div class="bg-gray-50 rounded-[2rem] p-6 mb-6 text-right border border-gray-100 overflow-hidden shadow-inner">
-                <div id="calcHistory" class="text-gray-400 text-sm h-6 overflow-hidden font-medium"></div>
-                <div id="calcDisplay" class="text-4xl font-bold text-gray-800 truncate tracking-tight">0</div>
-            </div>
-
-            <!-- Optimized Keypad Grid -->
-            <div class="grid grid-cols-4 gap-3">
-                <button onclick="calcClear()" class="calc-btn clear-btn">AC</button>
-                <button onclick="calcInput('/')" class="calc-btn op-btn">÷</button>
-                <button onclick="calcBackspace()" class="calc-btn op-btn">⌫</button>
-                
-                <button onclick="calcInput('7')" class="calc-btn">7</button>
-                <button onclick="calcInput('8')" class="calc-btn">8</button>
-                <button onclick="calcInput('9')" class="calc-btn">9</button>
-                <button onclick="calcInput('*')" class="calc-btn op-btn">×</button>
-                
-                <button onclick="calcInput('4')" class="calc-btn">4</button>
-                <button onclick="calcInput('5')" class="calc-btn">5</button>
-                <button onclick="calcInput('6')" class="calc-btn">6</button>
-                <button onclick="calcInput('-')" class="calc-btn op-btn">−</button>
-                
-                <button onclick="calcInput('1')" class="calc-btn">1</button>
-                <button onclick="calcInput('2')" class="calc-btn">2</button>
-                <button onclick="calcInput('3')" class="calc-btn">3</button>
-                <button onclick="calcInput('+')" class="calc-btn op-btn">+</button>
-                
-                <button onclick="calcInput('0')" class="calc-btn col-span-2">0</button>
-                <button onclick="calcInput('.')" class="calc-btn">.</button>
-                <button onclick="calcResult()" class="calc-btn eq-btn">=</button>
+                <!-- Keypad -->
+                <div class="grid grid-cols-4 gap-2 flex-1">
+                    <button onclick="calcClear()" class="calc-btn clear-btn">AC</button>
+                    <button onclick="calcInput('/')" class="calc-btn op-btn">÷</button>
+                    <button onclick="calcInput('*')" class="calc-btn op-btn">×</button>
+                    
+                    <button onclick="calcInput('7')" class="calc-btn">7</button>
+                    <button onclick="calcInput('8')" class="calc-btn">8</button>
+                    <button onclick="calcInput('9')" class="calc-btn">9</button>
+                    <button onclick="calcInput('-')" class="calc-btn op-btn">−</button>
+                    
+                    <button onclick="calcInput('4')" class="calc-btn">4</button>
+                    <button onclick="calcInput('5')" class="calc-btn">5</button>
+                    <button onclick="calcInput('6')" class="calc-btn">6</button>
+                    <button onclick="calcInput('+')" class="calc-btn op-btn">+</button>
+                    
+                    <button onclick="calcInput('1')" class="calc-btn">1</button>
+                    <button onclick="calcInput('2')" class="calc-btn">2</button>
+                    <button onclick="calcInput('3')" class="calc-btn">3</button>
+                    <button onclick="calcResult()" class="calc-btn eq-btn">=</button>
+                    
+                    <button onclick="calcInput('0')" class="calc-btn col-span-2">0</button>
+                    <button onclick="calcInput('.')" class="calc-btn">.</button>
+                    <button onclick="calcBackspace()" class="calc-btn op-btn">⌫</button>
+                </div>
             </div>
         </div>
     </div>
@@ -240,13 +239,13 @@
             const mTab = document.getElementById('metricTab');
             const iTab = document.getElementById('imperialTab');
             if (unit === 'metric') {
-                mTab.className = "flex-1 py-2 rounded-lg font-semibold text-xs bg-white shadow-sm text-blue-600";
-                iTab.className = "flex-1 py-2 rounded-lg font-semibold text-xs text-gray-500";
+                mTab.className = "flex-1 py-1.5 rounded-lg font-semibold text-xs bg-white shadow-sm text-blue-600";
+                iTab.className = "flex-1 py-1.5 rounded-lg font-semibold text-xs text-gray-500";
                 document.getElementById('metricInputs').classList.remove('hidden');
                 document.getElementById('imperialInputs').classList.add('hidden');
             } else {
-                iTab.className = "flex-1 py-2 rounded-lg font-semibold text-xs bg-white shadow-sm text-blue-600";
-                mTab.className = "flex-1 py-2 rounded-lg font-semibold text-xs text-gray-500";
+                iTab.className = "flex-1 py-1.5 rounded-lg font-semibold text-xs bg-white shadow-sm text-blue-600";
+                mTab.className = "flex-1 py-1.5 rounded-lg font-semibold text-xs text-gray-500";
                 document.getElementById('metricInputs').classList.add('hidden');
                 document.getElementById('imperialInputs').classList.remove('hidden');
             }
@@ -281,16 +280,16 @@
             let status, color, pct, advice;
             if (bmi < 18.5) {
                 status = "Underweight"; color = "#3b82f6"; pct = (bmi/18.5)*25;
-                advice = "You are in the underweight range. Consider speaking with a dietician.";
+                advice = "Consider speaking with a dietician.";
             } else if (bmi < 25) {
-                status = "Healthy Weight"; color = "#10b981"; pct = 25 + ((bmi-18.5)/6.5)*25;
-                advice = "You're in the healthy range! Keep up the good work.";
+                status = "Healthy"; color = "#10b981"; pct = 25 + ((bmi-18.5)/6.5)*25;
+                advice = "You're in the healthy range! Great work.";
             } else if (bmi < 30) {
                 status = "Overweight"; color = "#f59e0b"; pct = 50 + ((bmi-25)/5)*25;
-                advice = "You are in the overweight category. Regular exercise could be beneficial.";
+                advice = "Regular exercise could be beneficial.";
             } else {
                 status = "Obese"; color = "#ef4444"; pct = Math.min(100, 75 + ((bmi-30)/10)*25);
-                advice = "Your BMI suggests obesity. Consult a healthcare provider for personalized guidance.";
+                advice = "Consult a healthcare provider for guidance.";
             }
 
             statEl.innerText = status;
@@ -308,13 +307,11 @@
         const calcHistory = document.getElementById('calcHistory');
 
         function calcInput(val) {
-            // Prevent multiple decimal points in one number segment
             if (val === '.') {
                 const parts = calcExpression.split(/[+\-*/]/);
                 const lastPart = parts[parts.length - 1];
                 if (lastPart.includes('.')) return;
             }
-            
             if (calcExpression === "0" && !isNaN(val)) calcExpression = val;
             else calcExpression += val;
             updateCalcUI();
@@ -338,7 +335,6 @@
                 if (!calcExpression) return;
                 const sanitized = calcExpression.replace(/×/g, '*').replace(/÷/g, '/');
                 if (/[+\-*/.]$/.test(sanitized)) return;
-                
                 const result = eval(sanitized);
                 calcHistory.innerText = calcExpression + " =";
                 calcExpression = result.toString();
@@ -360,15 +356,9 @@
                 if (key === '+') calcInput('+');
                 if (key === '-') calcInput('-');
                 if (key === '*') calcInput('*');
-                if (key === '/') {
-                    e.preventDefault();
-                    calcInput('/');
-                }
+                if (key === '/') { e.preventDefault(); calcInput('/'); }
                 if (key === '.') calcInput('.');
-                if (key === 'Enter' || key === '=') {
-                    e.preventDefault();
-                    calcResult();
-                }
+                if (key === 'Enter' || key === '=') { e.preventDefault(); calcResult(); }
                 if (key === 'Backspace') calcBackspace();
                 if (key === 'Escape') calcClear();
             } else if (currentApp === 'bmi') {
